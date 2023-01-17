@@ -7,6 +7,8 @@
 #     2. 然后执行命令sudo chmod +x /usr/local/bin/cz-init
 #     3. 在需要初始化commitizen的项目目录下执行命令cz-init
 
+# 参考: https://www.jianshu.com/p/d264f88d13a4
+
 if [ ! -d "node_modules" ]; then
     echo "未找到node_modules文件夹！"
     exit 1
