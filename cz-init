@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# 本脚本用于初始化commitizen, 并将语言设置为中文。
+# commitizen 用于规范提交内容，通过选择的方式书写commit message
+# 使用方式
+#     1. 首先将本脚本放置在/usr/local/bin目录下
+#     2. 然后执行命令sudo chmod +x /usr/local/bin/cz-init
+#     3. 在需要初始化commitizen的项目目录下执行命令cz-init
+
+if [ ! -d "node_modules" ]; then
+    echo "未找到node_modules文件夹！"
+    exit 1
+fi
+
+if [ ! -f "package-lock.json" ] && [ ! -f "yarn.lock" ]; then
+    echo "请使用npm 或 yarn 作为包管理器！"
+    exit 2
+fi
+
+echo "初始化中..."
+
+commitizen init cz-conventional-changelog --save --save-exact --force
+
+if [ -f "package-lock.json" ]; then
+    npm i --save-dev cz-conventional-changelog-zh
+fi
+
+if [ -f "yarn.lock" ]; then
+    yarn add -D cz-conventional-changelog-zh
+fi
+
+sed -i '' 's/\.\/node_modules\/cz-conventional-changelog/\.\/node_modules\/cz-conventional-changelog-zh/g' package.json
+
+if [ ! -d ".git" ]; then
+    git init
+fi
+
+echo "初始化完成！"
+
+echo -e "\033[32m 请先将改动加到git暂存，然后使用git cz命令进行提交 \033[0m"
