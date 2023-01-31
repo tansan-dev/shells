@@ -10,25 +10,32 @@
 # 参考: https://www.jianshu.com/p/d264f88d13a4
 
 if [ ! -d "node_modules" ]; then
-    echo "未找到node_modules文件夹！"
+    echo "未找到node_modules文件夹!"
     exit 1
 fi
 
-if [ ! -f "package-lock.json" ] && [ ! -f "yarn.lock" ]; then
-    echo "请使用npm 或 yarn 作为包管理器！"
+if [ ! -f "package-lock.json" ] && [ ! -f "yarn.lock" ] && [ ! -f "pnpm-lock.yaml" ]; then
+    echo "未找到lock文件!"
     exit 2
 fi
 
 echo "初始化中..."
 
-commitizen init cz-conventional-changelog --save --save-exact --force
+npm -g install commitizen@latest conventional-changelog-cli@latest conventional-changelog@latest
 
 if [ -f "package-lock.json" ]; then
-    npm i --save-dev cz-conventional-changelog-zh
+    commitizen init cz-conventional-changelog --save-dev --save-exact --force
+    npm install --save-dev cz-conventional-changelog-zh
 fi
 
 if [ -f "yarn.lock" ]; then
+    commitizen init cz-conventional-changelog --yarn --dev --exact --force
     yarn add -D cz-conventional-changelog-zh
+fi
+
+if [ -f "pnpm-lock.yaml" ]; then
+    pnpm install -D cz-conventional-changelog-zh
+    commitizen init cz-conventional-changelog --pnpm --save-dev --save-exact --force
 fi
 
 sed -i '' 's/\.\/node_modules\/cz-conventional-changelog/\.\/node_modules\/cz-conventional-changelog-zh/g' package.json
@@ -39,4 +46,4 @@ fi
 
 echo "初始化完成！"
 
-echo -e "\033[32m 请先将改动加到git暂存，然后使用git cz命令进行提交 \033[0m"
+echo -e "\033[32m 请先将改动加到git暂存,然后使用git cz命令进行提交 \033[0m"
