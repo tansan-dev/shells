@@ -38,7 +38,7 @@ if [ -f "pnpm-lock.yaml" ]; then
     commitizen init cz-conventional-changelog --pnpm --save-dev --save-exact --force
 fi
 
-npx pkg set config.commitizen.path="./node_modules/cz-conventional-changelog-zh"
+sed -i '' 's/\.\/node_modules\/cz-conventional-changelog/\.\/node_modules\/cz-conventional-changelog-zh/g' package.json
 
 if [ ! -d ".git" ]; then
     git init
